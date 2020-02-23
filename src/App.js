@@ -1,7 +1,14 @@
 import React from 'react';
 
+import { UserProvider } from './contexts';
+import { Router } from './routes';
+
 function App() {
-  return <div>Chat app</div>;
+  return (
+    <UserProvider>
+      <Router />
+    </UserProvider>
+  );
 }
 
 export default App;
