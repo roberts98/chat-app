@@ -1,14 +1,10 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { signInWithGoogle } from '../firebase';
-import { UserContext } from '../contexts';
+import { signInWithGoogle } from '../firebase/auth';
 
 export function Login() {
-  const user = useContext(UserContext);
-  console.log(user);
-
-  async function handleClick() {
-    await signInWithGoogle();
+  function handleClick() {
+    signInWithGoogle();
   }
 
   return <button onClick={handleClick}>Login</button>;

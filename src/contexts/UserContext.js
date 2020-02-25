@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react';
 
 import { auth } from '../firebase';
+import { createUserDocument } from '../firebase/auth';
 
 export const UserContext = createContext();
 
@@ -11,8 +12,14 @@ export function UserProvider({ children }) {
   useEffect(() => {
     setIsLoading(true);
 
-    const unsubscribeFromAuth = auth.onAuthStateChanged(user => {
-      setUser(user);
+    const unsubscribeFromAuth = auth.onAuthStateChanged(async user => {
+      if (user) {
+        const userDocument = await createUserDocument(user);
+        setUser({ id: userDocument.id, ...userDocument.data() });
+      } else {
+        setUser(null);
+      }
+
       setIsLoading(false);
     });
 

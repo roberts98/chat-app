@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import { Home, Login } from '../components';
+import { Home, Chat } from '../components';
 
 export function Router({ children }) {
   return (
@@ -9,7 +9,7 @@ export function Router({ children }) {
       {children}
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/login" component={Login} />
+        <Route path="/chats/:id" component={Chat} />
       </Switch>
     </BrowserRouter>
   );

@@ -1,28 +1,27 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 
-import { UserContext } from '../contexts';
-import { signOut } from '../firebase';
+import { signOut } from '../firebase/auth';
+import { Modal, CreateChatForm, ChatsList } from './';
 
 export function Home() {
-  const { user, isLoading } = useContext(UserContext);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   function handleLogout() {
     signOut();
   }
 
-  if (isLoading) {
-    return 'loading';
+  function handleModalOpen() {
+    setIsModalOpen(true);
   }
 
   return (
     <div>
       <h1>Home</h1>
-      {user ? (
-        <button onClick={handleLogout}>Log out</button>
-      ) : (
-        <Link to="/login">Login</Link>
-      )}
+      <button onClick={handleModalOpen}>Create chat</button>
+      <button onClick={handleLogout}>Log out</button>
+      <ChatsList />
+      <Modal setIsOpen={setIsModalOpen} isOpen={isModalOpen}>
+        <CreateChatForm />
+      </Modal>
     </div>
   );
 }

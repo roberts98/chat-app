@@ -1,14 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { UserProvider } from './contexts';
+import { UserContext } from './contexts';
 import { Router } from './routes';
+import { Login } from './components';
 
 function App() {
-  return (
-    <UserProvider>
-      <Router />
-    </UserProvider>
-  );
+  const { user, isLoading } = useContext(UserContext);
+
+  if (isLoading) {
+    return 'loading';
+  }
+
+  if (!user) {
+    return <Login />;
+  }
+
+  return <Router />;
 }
 
 export default App;
