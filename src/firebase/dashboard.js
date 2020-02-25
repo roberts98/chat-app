@@ -26,8 +26,13 @@ export async function getChat(id) {
 
 export async function sendMessage(chatId, message) {
   const chatRef = firestore.doc(`chats/${chatId}`);
+  const docRef = await chatRef.collection('/messages').add({ message });
+  const newMessage = await docRef.get();
 
-  chatRef.collection('/messages').add({ message });
+  chatRef.update({
+    lastMessageId: newMessage.id,
+    lastMessageDate: new Date()
+  });
 }
 
 export async function getMessages(chatId) {

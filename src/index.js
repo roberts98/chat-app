@@ -4,11 +4,13 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { UserProvider, ChatsProvider } from './contexts';
+import { GlobalStyles } from './styles';
 
 ReactDOM.render(
   <UserProvider>
     <ChatsProvider>
       <App />
+      <GlobalStyles />
     </ChatsProvider>
   </UserProvider>,
   document.getElementById('root')

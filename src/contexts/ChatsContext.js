@@ -8,16 +8,15 @@ export function ChatsProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    async function setChatsState() {
-      setIsLoading(true);
-      const snapshot = await firestore.collection('chats').get();
+    const unsubrcibe = firestore.collection('chats').onSnapshot(snapshot => {
       const chats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      setIsLoading(false);
       setChats(chats);
-    }
+    });
 
-    setChatsState();
+    return () => {
+      unsubrcibe();
+    };
   }, []);
 
   return (
