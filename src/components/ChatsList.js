@@ -12,8 +12,8 @@ export function ChatsList() {
 
   return (
     <div>
-      {chats.map(chat => (
-        <ChatTeaser chat={chat} key={chat.id} />
+      {chats.map(id => (
+        <ChatTeaser id={id} key={id} />
       ))}
     </div>
   );

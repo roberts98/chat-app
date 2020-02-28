@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import { sendMessage } from '../firebase/dashboard';
+import { UserContext } from '../contexts/UserContext';
 import { MessagesList } from './';
 
 export function Chat({ match }) {
+  const { user } = useContext(UserContext);
   const [message, setMessage] = useState('');
   const { id } = match.params;
 
@@ -13,7 +15,7 @@ export function Chat({ match }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    sendMessage(id, message);
+    sendMessage(id, { value: message, senderId: user.id });
   }
 
   return (

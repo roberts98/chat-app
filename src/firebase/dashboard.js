@@ -1,4 +1,6 @@
-import { firestore } from './';
+import { v4 as uuid } from 'uuid';
+
+import firebase, { firestore } from './';
 
 export async function getAllUsers() {
   const snapshot = await firestore.collection('users').get();
@@ -12,12 +14,19 @@ export async function getAllUsersExceptLoggedInUser(user) {
     .map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
-export async function createChat(name, members) {
-  const chat = await firestore.collection('chats').add({ name });
-
-  members.forEach(member => {
-    chat.collection('members').add({ member });
-  });
+export async function createChat(name, member) {
+  const chatRef = await firestore
+    .collection('chats')
+    .add({ name, members: [member] });
+  try {
+    await firestore
+      .doc(`userChats/${member}`)
+      .update({ chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id) });
+  } catch (error) {
+    await firestore
+      .doc(`userChats/${member}`)
+      .set({ chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id) });
+  }
 }
 
 export async function getChat(id) {
@@ -26,13 +35,11 @@ export async function getChat(id) {
 
 export async function sendMessage(chatId, message) {
   const chatRef = firestore.doc(`chats/${chatId}`);
-  const docRef = await chatRef.collection('/messages').add({ message });
-  const newMessage = await docRef.get();
+  const chatMessagesRef = firestore.doc(`chatMessages/${chatId}`);
+  const messageId = uuid();
 
-  chatRef.update({
-    lastMessageId: newMessage.id,
-    lastMessageDate: new Date()
-  });
+  chatMessagesRef.update({ [messageId]: { ...message, date: new Date() } });
+  chatRef.update({ lastMessageId: messageId });
 }
 
 export async function getMessages(chatId) {

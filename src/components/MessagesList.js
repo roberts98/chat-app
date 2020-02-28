@@ -7,11 +7,12 @@ export function MessagesList({ chatId }) {
 
   useEffect(() => {
     const unsubscribe = firestore
-      .collection(`chats/${chatId}/messages`)
+      .doc(`chatMessages/${chatId}`)
       .onSnapshot(snapshot => {
-        const messages = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
+        const data = snapshot.data();
+        const messages = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key]
         }));
 
         setMessages(messages);
@@ -25,7 +26,7 @@ export function MessagesList({ chatId }) {
   return (
     <div>
       {messages.map(message => (
-        <div key={message.id}>{message.message}</div>
+        <div key={message.id}>{message.value}</div>
       ))}
     </div>
   );

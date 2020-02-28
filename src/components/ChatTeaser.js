@@ -6,34 +6,49 @@ import { firestore } from '../firebase';
 import { Colors } from '../styles/colors';
 import avatar from '../assets/user.jpeg';
 
-export function ChatTeaser({ chat }) {
-  const [lastMessage, setLastMessage] = useState([]);
-  const [users, setUsers] = useState([]);
-  console.log(chat);
+export function ChatTeaser({ id }) {
+  const [lastMessage, setLastMessage] = useState('');
+  const [lastMessageId, setLastMessageId] = useState(null);
+
+  useEffect(() => {
+    const unsubsribeFromLastMessage = firestore
+      .doc(`/chats/${id}`)
+      .onSnapshot(snapshot => {
+        const { lastMessageId } = snapshot.data();
+        setLastMessageId(lastMessageId);
+      });
+
+    return () => {
+      unsubsribeFromLastMessage();
+    };
+  }, [id]);
 
   useEffect(() => {
     async function getLastMessage() {
-      const lastMessageDoc = await firestore
-        .doc(`/chats/${chat.id}/messages/${chat.lastMessageId}`)
-        .get();
-      const lastMessage = lastMessageDoc.data();
+      const chatMessageDoc = await firestore.doc(`/chatMessages/${id}`).get();
 
-      setLastMessage(lastMessage);
+      const data = chatMessageDoc.data();
+
+      if (data && lastMessageId) {
+        setLastMessage(data[lastMessageId]);
+      }
     }
 
     getLastMessage();
-  }, [chat]);
+  }, [lastMessageId, id]);
 
   return (
     <Wrapper>
-      <Flex>
+      <Link to={`chats/${id}`}>
         <Flex>
-          <Image src={avatar} alt="avatar" />
-          <Name>Luy Robin</Name>
+          <Flex>
+            <Image src={avatar} alt="avatar" />
+            <Name>Luy Robin</Name>
+          </Flex>
+          <Date>1 minute ago</Date>
         </Flex>
-        <Date>1 minute ago</Date>
-      </Flex>
-      <Message>{lastMessage.message}</Message>
+        <Message>{lastMessage && lastMessage.value}</Message>
+      </Link>
     </Wrapper>
   );
 }
@@ -43,6 +58,10 @@ const Wrapper = styled.div`
   background-color: ${Colors.WHITE};
   padding: 40px;
   border-radius: 6px;
+
+  a {
+    text-decoration: none;
+  }
 `;
 
 const Flex = styled.div`

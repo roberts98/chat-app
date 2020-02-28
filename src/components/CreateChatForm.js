@@ -34,7 +34,7 @@ export function CreateChatForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await createChat(formState.name, [user, allUsers]);
+    await createChat(formState.name, '3lGtCiMCUnOQj7c2mQ2WepQvae73');
   }
 
   return (

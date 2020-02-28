@@ -1,27 +1,26 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
+
 import { firestore } from '../firebase';
+import { UserContext } from './UserContext';
 
 export const ChatsContext = createContext();
 
 export function ChatsProvider({ children }) {
-  const [chats, setChats] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { user } = useContext(UserContext);
+  const [chats, setChats] = useState([]);
 
   useEffect(() => {
-    const unsubrcibe = firestore.collection('chats').onSnapshot(snapshot => {
-      const chats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    (async function() {
+      if (user) {
+        const snapshot = await firestore.doc(`userChats/${user.id}`).get();
+        const { chats } = snapshot.data();
 
-      setChats(chats);
-    });
-
-    return () => {
-      unsubrcibe();
-    };
-  }, []);
+        setChats(chats);
+      }
+    })();
+  }, [user]);
 
   return (
-    <ChatsContext.Provider value={{ chats, isLoading }}>
-      {children}
-    </ChatsContext.Provider>
+    <ChatsContext.Provider value={{ chats }}>{children}</ChatsContext.Provider>
   );
 }
