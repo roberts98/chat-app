@@ -1,12 +1,12 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import { Home, Chat } from '../components';
+import { Home, Chat, Sidebar } from '../components';
 
-export function Router({ children }) {
+export function Router() {
   return (
     <BrowserRouter>
-      {children}
+      <Sidebar />
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/chats/:id" component={Chat} />

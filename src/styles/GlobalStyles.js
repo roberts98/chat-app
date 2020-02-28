@@ -25,4 +25,8 @@ const Styles = createGlobalStyle`
     min-width: 100vw;
     min-height: 100vh;
   }
+
+  #root {
+    display: flex;
+  }
 `;
