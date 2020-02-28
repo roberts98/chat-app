@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import moment from 'moment';
 
 import { firestore } from '../firebase';
 import { Colors } from '../styles/colors';
-import avatar from '../assets/user.jpeg';
 
 export function ChatTeaser({ id }) {
   const [lastMessage, setLastMessage] = useState('');
@@ -26,28 +26,40 @@ export function ChatTeaser({ id }) {
   useEffect(() => {
     async function getLastMessage() {
       const chatMessageDoc = await firestore.doc(`/chatMessages/${id}`).get();
-
       const data = chatMessageDoc.data();
 
       if (data && lastMessageId) {
-        setLastMessage(data[lastMessageId]);
+        const lastMessage = data[lastMessageId];
+
+        const userSnapshot = await firestore
+          .doc(`/users/${lastMessage.senderId}`)
+          .get();
+        const userData = userSnapshot.data();
+
+        setLastMessage({
+          value: lastMessage.value,
+          date: lastMessage.date,
+          ...userData
+        });
       }
     }
 
     getLastMessage();
   }, [lastMessageId, id]);
 
+  const { value, photoURL, date, displayName } = lastMessage;
+
   return (
     <Wrapper>
       <Link to={`chats/${id}`}>
         <Flex>
           <Flex>
-            <Image src={avatar} alt="avatar" />
-            <Name>Luy Robin</Name>
+            <Image src={photoURL} alt="avatar" />
+            <Name>{displayName}</Name>
           </Flex>
-          <Date>1 minute ago</Date>
+          <Date>{date && moment(date.toDate()).fromNow()}</Date>
         </Flex>
-        <Message>{lastMessage && lastMessage.value}</Message>
+        <Message>{lastMessage && value}</Message>
       </Link>
     </Wrapper>
   );

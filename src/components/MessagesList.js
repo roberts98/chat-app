@@ -10,6 +10,11 @@ export function MessagesList({ chatId }) {
       .doc(`chatMessages/${chatId}`)
       .onSnapshot(snapshot => {
         const data = snapshot.data();
+
+        if (!data) {
+          return setMessages([]);
+        }
+
         const messages = Object.keys(data).map(key => ({
           id: key,
           ...data[key]
