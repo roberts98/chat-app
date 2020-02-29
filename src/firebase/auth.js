@@ -34,5 +34,5 @@ export async function createUserDocument(user, additionalData) {
     }
   }
 
-  return snapshot;
+  return userRef;
 }

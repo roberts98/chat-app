@@ -14,8 +14,10 @@ export function UserProvider({ children }) {
 
     const unsubscribeFromAuth = auth.onAuthStateChanged(async user => {
       if (user) {
-        const userDocument = await createUserDocument(user);
-        setUser({ id: userDocument.id, ...userDocument.data() });
+        const userRef = await createUserDocument(user);
+        userRef.onSnapshot(snapshot => {
+          setUser({ id: snapshot.id, ...snapshot.data() });
+        });
       } else {
         setUser(null);
       }
