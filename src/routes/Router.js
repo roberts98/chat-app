@@ -7,8 +7,8 @@ export function Router() {
   return (
     <BrowserRouter>
       <Sidebar />
+      <Home />
       <Switch>
-        <Route exact path="/" component={Home} />
         <Route path="/chats/:id" component={Chat} />
       </Switch>
     </BrowserRouter>

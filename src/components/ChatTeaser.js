@@ -51,7 +51,7 @@ export function ChatTeaser({ id }) {
 
   return (
     <Wrapper>
-      <Link to={`chats/${id}`}>
+      <Link to={`/chats/${id}`}>
         <Flex>
           <Flex>
             <Image src={photoURL} alt="avatar" />
