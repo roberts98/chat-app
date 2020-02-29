@@ -68,8 +68,9 @@ export function ChatTeaser({ id }) {
 const Wrapper = styled.div`
   width: 580px;
   background-color: ${Colors.WHITE};
-  padding: 40px;
+  padding: 28px 40px;
   border-radius: 6px;
+  margin-bottom: 20px;
 
   a {
     text-decoration: none;

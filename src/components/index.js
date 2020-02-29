@@ -7,3 +7,4 @@ export * from './ChatTeaser';
 export * from './Chat';
 export * from './MessagesList';
 export * from './Sidebar';
+export * from './Search';
