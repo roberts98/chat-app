@@ -44,15 +44,18 @@ export async function sendMessage(chatId, message) {
   const chatMessagesRef = firestore.doc(`chatMessages/${chatId}`);
   const chatMessagesSnapshot = await chatMessagesRef.get();
   const messageId = uuid();
-  chatRef.update({ lastMessageId: messageId });
 
   if (!chatMessagesSnapshot.exists) {
-    return chatMessagesRef.set({
+    chatMessagesRef.set({
+      [messageId]: { ...message, date: new Date() }
+    });
+  } else {
+    chatMessagesRef.update({
       [messageId]: { ...message, date: new Date() }
     });
   }
 
-  chatMessagesRef.update({ [messageId]: { ...message, date: new Date() } });
+  chatRef.update({ lastMessageId: messageId });
 }
 
 export async function getMessages(chatId) {

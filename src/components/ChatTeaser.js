@@ -30,7 +30,6 @@ export function ChatTeaser({ id }) {
 
       if (data && lastMessageId) {
         const lastMessage = data[lastMessageId];
-
         const userSnapshot = await firestore
           .doc(`/users/${lastMessage.senderId}`)
           .get();
