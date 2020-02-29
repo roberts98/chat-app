@@ -13,8 +13,11 @@ export function ChatsProvider({ children }) {
     (async function() {
       if (user) {
         const snapshot = await firestore.doc(`userChats/${user.id}`).get();
-        const { chats } = snapshot.data();
+        if (!snapshot.data()) {
+          return setChats([]);
+        }
 
+        const { chats } = snapshot.data();
         setChats(chats);
       }
     })();

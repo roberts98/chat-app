@@ -6,26 +6,25 @@ import search from '../assets/icons/search.svg';
 
 export function Search() {
   return (
-    <InputWrapper>
+    <InputWrapper icon={search}>
       <Input type="text" placeholder="Search" />
     </InputWrapper>
   );
 }
 
-const InputWrapper = styled.div`
+export const InputWrapper = styled.div`
   margin-bottom: 20px;
-  margin-top: 29px;
   position: relative;
 
   &::before {
-    content: url(${search});
+    content: url(${({ icon }) => icon});
     position: absolute;
     top: 21px;
     left: 42px;
   }
 `;
 
-const Input = styled.input`
+export const Input = styled.input`
   height: 70px;
   width: 100%;
   border: unset;

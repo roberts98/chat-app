@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { Modal, CreateChatForm, Search, ChatsList } from './';
+import { Modal, CreateChatForm, Search, ChatsList, ProposalsList } from './';
 import { Colors } from '../styles';
 import plus from '../assets/icons/plus.svg';
 import chevronDown from '../assets/icons/sidebar/chevron-down.svg';
@@ -26,6 +26,13 @@ export function Home() {
       </Header>
       <Search />
       <ChatsList />
+      <Header>
+        <Left>
+          <h1>Proposals</h1>
+          <span>All proposals</span>
+        </Left>
+      </Header>
+      <ProposalsList />
       <Modal setIsOpen={setIsModalOpen} isOpen={isModalOpen}>
         <CreateChatForm />
       </Modal>
@@ -35,11 +42,13 @@ export function Home() {
 
 const Main = styled.main`
   margin-top: 101px;
+  width: 580px;
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-bottom: 29px;
 
   h1 {
     font-size: 36px;
@@ -65,7 +74,7 @@ const Header = styled.div`
 
 const Left = styled.div``;
 
-const ButtonWrapper = styled.div`
+export const ButtonWrapper = styled.div`
   padding-top: 10px;
   position: relative;
 
@@ -77,7 +86,7 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-const Button = styled.button`
+export const Button = styled.button`
   width: 240px;
   height: 60px;
   color: ${Colors.WHITE};

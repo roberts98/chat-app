@@ -118,7 +118,7 @@ const Name = styled.h3`
   color: ${Colors.BLACK};
 `;
 
-const Icon = styled.span`
+export const Icon = styled.span`
   display: block;
   width: 52px;
   height: 52px;
@@ -134,6 +134,11 @@ const Icon = styled.span`
     left: 50%;
     top: 15px;
     transform: translateX(-50%);
+    width: 24px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 

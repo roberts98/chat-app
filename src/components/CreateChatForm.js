@@ -1,59 +1,45 @@
 import React, { useState, useEffect, useContext } from 'react';
+import Select from 'react-select';
 
-import {
-  getAllUsersExceptLoggedInUser,
-  createChat
-} from '../firebase/dashboard';
+import { getAvailableUsers, createChatProposal } from '../firebase/dashboard';
 import { UserContext } from '../contexts/UserContext';
+import { Button, ButtonWrapper } from './';
 
 export function CreateChatForm() {
   const { user } = useContext(UserContext);
-  const [allUsers, setAllUsers] = useState([]);
-  const [formState, setFormState] = useState({
-    name: '',
-    members: []
-  });
+  const [availableUsers, setAvailableUsers] = useState([]);
+  const [receipent, setReceipent] = useState('');
 
   useEffect(() => {
     async function setUsersState() {
-      const users = await getAllUsersExceptLoggedInUser(user);
-      setAllUsers(users);
+      const users = await getAvailableUsers(user.id);
+      setAvailableUsers(users);
     }
 
     setUsersState();
   }, [user]);
 
-  function handleChange(e) {
-    const { name, value } = e.target;
-
-    setFormState({
-      ...formState,
-      [name]: value
-    });
+  function handleChange(option) {
+    setReceipent(option);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    await createChat(formState.name, '3lGtCiMCUnOQj7c2mQ2WepQvae73');
+    await createChatProposal(user.id, receipent.id);
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        name="name"
-        value={formState.name}
+      <Select
         onChange={handleChange}
-        type="text"
-        placeholder="Chat name"
+        options={availableUsers}
+        getOptionLabel={option => option.displayName}
+        getOptionValue={option => option.id}
+        placeholder="Select receipent"
       />
-      <input
-        name="members"
-        value={formState.members}
-        onChange={handleChange}
-        type="text"
-        placeholder="Chat members"
-      />
-      <button type="submit">Create</button>
+      <ButtonWrapper>
+        <Button type="submit">Create New Chat</Button>
+      </ButtonWrapper>
     </form>
   );
 }

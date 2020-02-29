@@ -8,7 +8,12 @@ const customStyles = {
     right: 'auto',
     bottom: 'auto',
     marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
+    transform: 'translate(-50%, -50%)',
+    width: '600px',
+    background:
+      'linear-gradient(183deg,rgba(243,243,251,1) 0%,rgba(253,251,253,1) 100%) no-repeat',
+    border: 'unset',
+    boxShadow: 'rgba(86, 128, 248, 0.1) 17px 27px 53px'
   }
 };
 
