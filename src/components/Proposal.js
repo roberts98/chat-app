@@ -1,29 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { Colors } from '../styles/colors';
-import { firestore } from '../firebase';
-import { acceptProposal, declineProposal } from '../firebase/dashboard';
+import { acceptProposal, declineProposal } from '../firebase';
+import { useUser } from '../hooks';
 import { Icon } from './';
+import { Colors } from '../styles/colors';
 import checkmark from '../assets/icons/checkmark.svg';
 import power from '../assets/icons/sidebar/power.svg';
 
 export function Proposal({ proposal: { receipentId, requestorId, isMine } }) {
-  const [receipent, setReceipent] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const receipent = useUser(isMine ? receipentId : requestorId);
   const { photoURL, displayName } = receipent;
-
-  useEffect(() => {
-    async function getUser() {
-      const userDoc = await firestore
-        .doc(`users/${isMine ? receipentId : requestorId}`)
-        .get();
-      const userData = userDoc.data();
-      setReceipent(userData);
-    }
-
-    getUser();
-  }, [receipentId, requestorId, isMine]);
 
   async function handleAcceptClick() {
     setIsLoading(true);

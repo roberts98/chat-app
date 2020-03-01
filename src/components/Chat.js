@@ -1,48 +1,26 @@
-import React, { useState, useContext, useEffect } from 'react';
-
-import { sendMessage } from '../firebase/dashboard';
-import { UserContext } from '../contexts/UserContext';
-import { MessagesList } from './';
-import { firestore } from '../firebase';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
+
+import { sendMessage } from '../firebase';
+import { UserContext } from '../contexts';
+import { useChat, useUser } from '../hooks';
+import { MessagesList } from './';
 import { Colors, Device } from '../styles';
 import attach from '../assets/icons/attach.svg';
 import moreVertical from '../assets/icons/more-vertical.svg';
 import sendIcon from '../assets/icons/send.svg';
 import { Redirect } from 'react-router-dom';
 
-export function Chat({ match }) {
+export function Chat({
+  match: {
+    params: { id }
+  }
+}) {
   const { user } = useContext(UserContext);
-  const [chat, setChat] = useState(null);
-  const [receiver, setReceiver] = useState(null);
   const [message, setMessage] = useState('');
-  const { id } = match.params;
-
-  useEffect(() => {
-    async function getChat() {
-      const snapshot = await firestore.doc(`/chats/${id}`).get();
-      const chat = snapshot.data();
-      setChat(chat);
-    }
-
-    getChat();
-  }, [id]);
-
-  useEffect(() => {
-    async function getReceiver() {
-      if (!chat) {
-        return;
-      }
-
-      const receiverId = chat.members.filter(id => id !== user.id);
-      if (receiverId.length) {
-        const userSnapshot = await firestore.doc(`/users/${receiverId}`).get();
-        setReceiver({ id: userSnapshot.id, ...userSnapshot.data() });
-      }
-    }
-
-    getReceiver();
-  }, [user.id, chat]);
+  const chat = useChat(id);
+  const receiverId = chat.members?.filter(id => id !== user.id)[0];
+  const receiver = useUser(receiverId);
 
   function handleChange(e) {
     setMessage(e.target.value);
@@ -54,11 +32,11 @@ export function Chat({ match }) {
     setMessage('');
   }
 
-  if (!receiver) {
+  if (!receiver || !chat) {
     return null;
   }
 
-  if (!chat.members.includes(user.id)) {
+  if (chat.members && !chat.members.includes(user.id)) {
     return <Redirect to="/" />;
   }
 

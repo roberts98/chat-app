@@ -1,65 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import moment from 'moment';
 
-import { firestore } from '../firebase';
 import { UserContext } from '../contexts';
+import { useUser, useLastMessage, useChatSubscriber } from '../hooks';
 import { Device, Colors } from '../styles';
 
 export function ChatTeaser({ id }) {
   const {
     user: { id: userId }
   } = useContext(UserContext);
-  const [lastMessage, setLastMessage] = useState('');
-  const [lastMessageId, setLastMessageId] = useState(null);
-  const [receipentId, setReceipentId] = useState(null);
-  const [receipent, setReceipent] = useState({});
-
-  useEffect(() => {
-    const unsubsribeFromLastMessage = firestore
-      .doc(`/chats/${id}`)
-      .onSnapshot(snapshot => {
-        const { lastMessageId } = snapshot.data();
-        const receipentId = snapshot
-          .data()
-          .members.filter(memberId => memberId !== userId)[0];
-        setLastMessageId(lastMessageId);
-        setReceipentId(receipentId);
-      });
-
-    return () => {
-      unsubsribeFromLastMessage();
-    };
-  }, [userId, id]);
-
-  useEffect(() => {
-    (async function() {
-      if (receipentId) {
-        const userSnapshot = await firestore.doc(`/users/${receipentId}`).get();
-        const userData = userSnapshot.data();
-        setReceipent(userData);
-      }
-    })();
-  }, [receipentId]);
-
-  useEffect(() => {
-    async function getLastMessage() {
-      const chatMessageDoc = await firestore.doc(`/chatMessages/${id}`).get();
-      const data = chatMessageDoc.data();
-
-      if (data && lastMessageId) {
-        const lastMessage = data[lastMessageId];
-
-        setLastMessage({
-          value: lastMessage.value,
-          date: lastMessage.date
-        });
-      }
-    }
-
-    getLastMessage();
-  }, [lastMessageId, id, receipentId]);
+  const [{ lastMessageId, receipentId }] = useChatSubscriber(id, userId);
+  const receipent = useUser(receipentId);
+  const lastMessage = useLastMessage(id, lastMessageId);
 
   const { value, date } = lastMessage;
   const { photoURL, displayName } = receipent;

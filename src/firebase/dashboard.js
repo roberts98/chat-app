@@ -2,11 +2,6 @@ import { v4 as uuid } from 'uuid';
 
 import firebase, { firestore } from './';
 
-export async function getAllUsers() {
-  const snapshot = await firestore.collection('users').get();
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-}
-
 export async function getAllUsersExceptLoggedInUser(userId) {
   const snapshot = await firestore.collection('users').get();
   return snapshot.docs
@@ -52,6 +47,11 @@ async function createChat(requestorId, receipentId) {
 
 export async function getChat(id) {
   return firestore.doc(`chats/${id}`).get();
+}
+
+export async function getChatData(id) {
+  const snapshot = await getChat(id);
+  return snapshot.data();
 }
 
 export async function sendMessage(chatId, message) {
@@ -147,4 +147,71 @@ export async function acceptProposal(requestorId) {
 export async function declineProposal(requestorId) {
   const userId = firebase.auth().currentUser.uid;
   await deleteProposal(requestorId, userId);
+}
+
+export function userChatSubscriber(userId, callback) {
+  return firestore.doc(`userChats/${userId}`).onSnapshot(snapshot => {
+    if (!snapshot.data()) {
+      return callback([]);
+    }
+
+    const { chats } = snapshot.data();
+    callback(chats);
+  });
+}
+
+export function chatSubscriber(chatId, userId, callback) {
+  return firestore.doc(`chats/${chatId}`).onSnapshot(snapshot => {
+    const { lastMessageId } = snapshot.data();
+    const receipentId = snapshot
+      .data()
+      .members.filter(memberId => memberId !== userId)[0];
+
+    callback(lastMessageId, receipentId);
+  });
+}
+
+export async function getUserData(userId) {
+  const userSnapshot = await firestore.doc(`/users/${userId}`).get();
+  return userSnapshot.data();
+}
+
+export async function getChatMessagesData(chatId) {
+  const chatMessagesSnapshot = await firestore
+    .doc(`/chatMessages/${chatId}`)
+    .get();
+  return chatMessagesSnapshot.data();
+}
+
+export function messagesSubscriber(chatId, callback) {
+  return firestore.doc(`chatMessages/${chatId}`).onSnapshot(snapshot => {
+    const data = snapshot.data();
+
+    if (!data) {
+      return callback([]);
+    }
+
+    const messages = Object.keys(data).map(key => ({
+      id: key,
+      ...data[key]
+    }));
+    const sortedMessages = messages.sort(
+      (a, b) => a.date.seconds - b.date.seconds
+    );
+
+    callback(sortedMessages);
+  });
+}
+
+export function proposalsSubscriber(userId, callback) {
+  return firestore
+    .collection(`users/${userId}/chatProposals`)
+    .onSnapshot(snapshot => {
+      const proposals = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      callback(proposals);
+    });
 }

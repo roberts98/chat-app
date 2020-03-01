@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { signInWithGoogle } from '../firebase/auth';
+import { signInWithGoogle } from '../firebase';
 
 export function Login() {
   function handleClick() {

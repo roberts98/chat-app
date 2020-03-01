@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { UserContext } from '../contexts';
-import { signOut } from '../firebase/auth';
+import { signOut } from '../firebase';
+import { useWindowWidth } from '../hooks';
 import { Colors, Device } from '../styles';
 import calendar from '../assets/icons/sidebar/calendar.svg';
 import chevronDown from '../assets/icons/sidebar/chevron-down.svg';
@@ -13,7 +14,6 @@ import messenger from '../assets/icons/sidebar/messenger.svg';
 import notifications from '../assets/icons/sidebar/notifications.svg';
 import settings from '../assets/icons/sidebar/settings.svg';
 import power from '../assets/icons/sidebar/power.svg';
-import { useWindowWidth } from '../hooks/useWindowWidth';
 
 export function Sidebar() {
   const {

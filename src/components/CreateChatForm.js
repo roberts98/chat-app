@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Select from 'react-select';
 
-import { getAvailableUsers, createChatProposal } from '../firebase/dashboard';
+import { getAvailableUsers, createChatProposal } from '../firebase';
 import { UserContext } from '../contexts/UserContext';
 import { Button, ButtonWrapper } from './';
 

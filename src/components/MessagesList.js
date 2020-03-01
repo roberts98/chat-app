@@ -1,38 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
-import { firestore } from '../firebase';
 import { Colors, Device } from '../styles';
+import { useMessagesSubscriber } from '../hooks';
 
 export function MessagesList({ userId, chatId }) {
-  const [messages, setMessages] = useState([]);
   const ref = useRef();
-
-  useEffect(() => {
-    const unsubscribe = firestore
-      .doc(`chatMessages/${chatId}`)
-      .onSnapshot(snapshot => {
-        const data = snapshot.data();
-
-        if (!data) {
-          return setMessages([]);
-        }
-
-        const messages = Object.keys(data).map(key => ({
-          id: key,
-          ...data[key]
-        }));
-        const sortedMessages = messages.sort(
-          (a, b) => a.date.seconds - b.date.seconds
-        );
-
-        setMessages(sortedMessages);
-      });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [chatId]);
+  const messages = useMessagesSubscriber(chatId);
 
   useEffect(() => {
     ref.current.scrollIntoView();

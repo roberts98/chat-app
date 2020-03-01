@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
-import { firestore } from '../firebase';
 import { UserContext } from './UserContext';
+import { userChatSubscriber } from '../firebase';
 
 export const ChatsContext = createContext();
 
@@ -11,16 +11,7 @@ export function ChatsProvider({ children }) {
 
   useEffect(() => {
     if (user) {
-      const unsubscribe = firestore
-        .doc(`userChats/${user.id}`)
-        .onSnapshot(snapshot => {
-          if (!snapshot.data()) {
-            return setChats([]);
-          }
-
-          const { chats } = snapshot.data();
-          setChats(chats);
-        });
+      const unsubscribe = userChatSubscriber(user.id, setChats);
 
       return () => {
         unsubscribe();

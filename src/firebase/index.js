@@ -19,3 +19,5 @@ export const firestore = firebase.firestore();
 export const auth = firebase.auth();
 
 export default firebase;
+export * from './auth';
+export * from './dashboard';
