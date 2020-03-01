@@ -5,7 +5,7 @@ import { UserContext } from '../contexts/UserContext';
 import { MessagesList } from './';
 import { firestore } from '../firebase';
 import styled from 'styled-components';
-import { Colors } from '../styles';
+import { Colors, Device } from '../styles';
 import attach from '../assets/icons/attach.svg';
 import moreVertical from '../assets/icons/more-vertical.svg';
 import sendIcon from '../assets/icons/send.svg';
@@ -85,11 +85,20 @@ export function Chat({ match }) {
 }
 
 const Wrapper = styled.div`
-  margin-top: 111px;
-  margin-left: 88px;
-  width: 800px;
+  margin-top: 20px;
   height: 100%;
   background-color: ${Colors.WHITE};
+
+  @media ${Device.laptop} {
+    margin-top: 111px;
+    margin-left: 40px;
+    margin-right: 40px;
+  }
+
+  @media ${Device.laptopL} {
+    margin-left: 88px;
+    width: 600px;
+  }
 `;
 
 const Flex = styled.div`
@@ -101,10 +110,14 @@ const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 28px 60px;
+  padding: 28px 20px;
   background-color: ${Colors.SUPER_LIGHT};
   height: 111px;
   border-bottom: 1px solid ${Colors.LIGHT};
+
+  @media ${Device.laptop} {
+    padding: 28px 60px;
+  }
 `;
 
 const Image = styled.img`
@@ -144,8 +157,12 @@ export const Icon = styled.span`
 
 const Form = styled.form`
   clear: both;
-  padding: 30px 60px;
   position: relative;
+  padding: 30px 20px;
+
+  @media ${Device.laptopL} {
+    padding: 30px 60px;
+  }
 `;
 
 const Input = styled.input`
@@ -168,7 +185,11 @@ const ButtonWrapper = styled.div`
     content: url(${sendIcon});
     position: absolute;
     top: 39px;
-    right: 73px;
+    right: 20px;
+
+    @media ${Device.laptopL} {
+      right: 73px;
+    }
   }
 `;
 
@@ -179,6 +200,10 @@ const Button = styled.button`
   height: 40px;
   background: unset;
   top: 39px;
-  right: 73px;
   cursor: pointer;
+  right: 20px;
+
+  @media ${Device.laptopL} {
+    right: 73px;
+  }
 `;

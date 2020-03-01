@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import { Modal, CreateChatForm, Search, ChatsList, ProposalsList } from './';
-import { Colors } from '../styles';
+import { Colors, Device } from '../styles';
 import plus from '../assets/icons/plus.svg';
 import chevronDown from '../assets/icons/sidebar/chevron-down.svg';
 
@@ -41,14 +41,19 @@ export function Home() {
 }
 
 const Main = styled.main`
-  margin-top: 101px;
-  width: 580px;
+  margin-top: 60px;
+  padding: 0 20px;
+
+  @media ${Device.laptop} {
+    margin-top: 101px;
+    width: 580px;
+    padding: 0;
+  }
 `;
 
 const Header = styled.div`
-  display: flex;
-  justify-content: space-between;
   margin-bottom: 29px;
+  display: block;
 
   h1 {
     font-size: 36px;
@@ -69,6 +74,11 @@ const Header = styled.div`
       right: -26px;
       top: 4px;
     }
+  }
+
+  @media ${Device.laptop} {
+    display: flex;
+    justify-content: space-between;
   }
 `;
 

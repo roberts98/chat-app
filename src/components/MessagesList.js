@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 
 import { firestore } from '../firebase';
-import { Colors } from '../styles';
+import { Colors, Device } from '../styles';
 
 export function MessagesList({ userId, chatId }) {
   const [messages, setMessages] = useState([]);
+  const ref = useRef();
 
   useEffect(() => {
     const unsubscribe = firestore
@@ -33,6 +34,10 @@ export function MessagesList({ userId, chatId }) {
     };
   }, [chatId]);
 
+  useEffect(() => {
+    ref.current.scrollIntoView();
+  }, [messages]);
+
   return (
     <Wrapper>
       {messages.map(message => {
@@ -42,14 +47,19 @@ export function MessagesList({ userId, chatId }) {
           </Message>
         );
       })}
+      <div ref={ref} style={{ float: 'left', clear: 'both' }} />
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
-  padding: 30px 60px;
   max-height: 50vh;
   overflow-y: auto;
+  padding: 30px 20px;
+
+  @media ${Device.laptopL} {
+    padding: 30px 60px;
+  }
 `;
 
 const Message = styled.div`
@@ -65,8 +75,11 @@ const Message = styled.div`
   border-radius: 10px;
   margin-bottom: 15px;
   padding: 15px 25px;
-  max-width: 70%;
   border: ${({ isMine }) => (isMine ? `1px solid ${Colors.LIGHT}` : 'none')};
   float: ${({ isMine }) => (isMine ? 'right' : 'left')};
   clear: both;
+
+  @media ${Device.laptopL} {
+    max-width: 70%;
+  }
 `;

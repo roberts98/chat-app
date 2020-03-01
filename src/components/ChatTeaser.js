@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import { firestore } from '../firebase';
 import { Colors } from '../styles/colors';
+import { Device } from '../styles';
 
 export function ChatTeaser({ id }) {
   const [lastMessage, setLastMessage] = useState('');
@@ -65,7 +66,6 @@ export function ChatTeaser({ id }) {
 }
 
 const Wrapper = styled.div`
-  width: 580px;
   background-color: ${Colors.WHITE};
   padding: 28px 40px;
   border-radius: 6px;
@@ -74,12 +74,18 @@ const Wrapper = styled.div`
   a {
     text-decoration: none;
   }
+
+  @media ${Device.laptopL} {
+    width: 580px;
+  }
 `;
 
 const Flex = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  @media ${Device.laptop} {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 `;
 
 const Image = styled.img`

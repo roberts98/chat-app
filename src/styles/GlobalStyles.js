@@ -2,6 +2,7 @@ import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 
 import TTMedium from '../assets/fonts/TTNorms-Medium.otf';
+import { Device } from './breakpoints';
 
 export function GlobalStyles() {
   return <Styles />;
@@ -27,6 +28,9 @@ const Styles = createGlobalStyle`
   }
 
   #root {
-    display: flex;
+
+    @media ${Device.laptop} {
+      display: flex;
+    }
   }
 `;
