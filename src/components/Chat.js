@@ -9,6 +9,7 @@ import { Colors, Device } from '../styles';
 import attach from '../assets/icons/attach.svg';
 import moreVertical from '../assets/icons/more-vertical.svg';
 import sendIcon from '../assets/icons/send.svg';
+import { Redirect } from 'react-router-dom';
 
 export function Chat({ match }) {
   const { user } = useContext(UserContext);
@@ -55,6 +56,10 @@ export function Chat({ match }) {
 
   if (!receiver) {
     return null;
+  }
+
+  if (!chat.members.includes(user.id)) {
+    return <Redirect to="/" />;
   }
 
   return (
