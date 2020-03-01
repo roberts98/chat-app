@@ -138,8 +138,8 @@ const Name = styled.h3`
 
 export const Icon = styled.span`
   display: block;
-  width: 52px;
-  height: 52px;
+  width: 40px;
+  height: 40px;
   box-shadow: 1px 3px 22px #ddd;
   border-radius: 50px;
   margin-left: 20px;
@@ -150,13 +150,22 @@ export const Icon = styled.span`
     content: url(${({ icon }) => icon});
     position: absolute;
     left: 50%;
-    top: 15px;
+    top: 9px;
     transform: translateX(-50%);
     width: 24px;
     height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  @media ${Device.laptopL} {
+    width: 52px;
+    height: 52px;
+
+    &::before {
+      top: 15px;
+    }
   }
 `;
 
