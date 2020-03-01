@@ -10,17 +10,22 @@ export function ChatsProvider({ children }) {
   const [chats, setChats] = useState([]);
 
   useEffect(() => {
-    (async function() {
-      if (user) {
-        const snapshot = await firestore.doc(`userChats/${user.id}`).get();
-        if (!snapshot.data()) {
-          return setChats([]);
-        }
+    if (user) {
+      const unsubscribe = firestore
+        .doc(`userChats/${user.id}`)
+        .onSnapshot(snapshot => {
+          if (!snapshot.data()) {
+            return setChats([]);
+          }
 
-        const { chats } = snapshot.data();
-        setChats(chats);
-      }
-    })();
+          const { chats } = snapshot.data();
+          setChats(chats);
+        });
+
+      return () => {
+        unsubscribe();
+      };
+    }
   }, [user]);
 
   return (

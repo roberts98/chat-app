@@ -15,23 +15,38 @@ export async function getAllUsersExceptLoggedInUser(userId) {
 }
 
 async function createChat(requestorId, receipentId) {
-  const chatRef = await firestore
-    .collection('chats')
-    .add({ members: [requestorId, receipentId] });
   try {
-    await firestore
+    const chatRef = await firestore
+      .collection('chats')
+      .add({ members: [requestorId, receipentId] });
+    const requestorChatSnapshot = await firestore
       .doc(`userChats/${requestorId}`)
-      .update({ chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id) });
-    await firestore
+      .get();
+    const receipentChatSnapshot = await firestore
       .doc(`userChats/${receipentId}`)
-      .update({ chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id) });
+      .get();
+
+    if (requestorChatSnapshot.exists) {
+      await requestorChatSnapshot.ref.update({
+        chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id)
+      });
+    } else {
+      await requestorChatSnapshot.ref.set({
+        chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id)
+      });
+    }
+
+    if (receipentChatSnapshot.exists) {
+      await receipentChatSnapshot.ref.update({
+        chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id)
+      });
+    } else {
+      await receipentChatSnapshot.ref.set({
+        chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id)
+      });
+    }
   } catch (error) {
-    await firestore
-      .doc(`userChats/${requestorId}`)
-      .set({ chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id) });
-    await firestore
-      .doc(`userChats/${receipentId}`)
-      .set({ chats: firebase.firestore.FieldValue.arrayUnion(chatRef.id) });
+    console.log(error);
   }
 }
 
@@ -102,23 +117,31 @@ export async function createChatProposal(requestorId, receipentId) {
 }
 
 async function deleteProposal(requestorId, userId) {
-  const userProposalSnapshot = await firestore
-    .collection(`users/${userId}/chatProposals`)
-    .where('requestorId', '==', requestorId)
-    .get();
-  const requestorProposalSnapshot = await firestore
-    .collection(`users/${requestorId}/chatProposals`)
-    .where('receipentId', '==', userId)
-    .get();
+  try {
+    const userProposalSnapshot = await firestore
+      .collection(`users/${userId}/chatProposals`)
+      .where('requestorId', '==', requestorId)
+      .get();
+    const requestorProposalSnapshot = await firestore
+      .collection(`users/${requestorId}/chatProposals`)
+      .where('receipentId', '==', userId)
+      .get();
 
-  userProposalSnapshot.forEach(doc => doc.ref.delete());
-  requestorProposalSnapshot.forEach(doc => doc.ref.delete());
+    userProposalSnapshot.forEach(doc => doc.ref.delete());
+    requestorProposalSnapshot.forEach(doc => doc.ref.delete());
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function acceptProposal(requestorId) {
   const userId = firebase.auth().currentUser.uid;
-  await deleteProposal(requestorId, userId);
-  await createChat(requestorId, userId);
+  try {
+    await createChat(requestorId, userId);
+    await deleteProposal(requestorId, userId);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export async function declineProposal(requestorId) {

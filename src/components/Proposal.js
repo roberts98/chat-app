@@ -10,6 +10,7 @@ import power from '../assets/icons/sidebar/power.svg';
 
 export function Proposal({ proposal: { receipentId, requestorId, isMine } }) {
   const [receipent, setReceipent] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const { photoURL, displayName } = receipent;
 
   useEffect(() => {
@@ -24,12 +25,20 @@ export function Proposal({ proposal: { receipentId, requestorId, isMine } }) {
     getUser();
   }, [receipentId, requestorId, isMine]);
 
-  function handleAcceptClick() {
-    acceptProposal(requestorId);
+  async function handleAcceptClick() {
+    setIsLoading(true);
+    await acceptProposal(requestorId);
+    setIsLoading(false);
   }
 
-  function handleDeclineClick() {
-    declineProposal(requestorId);
+  async function handleDeclineClick() {
+    setIsLoading(true);
+    await declineProposal(requestorId);
+    setIsLoading(false);
+  }
+
+  if (isLoading) {
+    return 'loading';
   }
 
   return (
