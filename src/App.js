@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 
 import { UserContext } from './contexts';
 import { Router } from './routes';
-import { Login } from './components';
+import { Login, FullPageSpinner } from './components';
 
 function App() {
   const { user, isLoading } = useContext(UserContext);
 
   if (isLoading) {
-    return 'loading';
+    return <FullPageSpinner />;
   }
 
   if (!user) {

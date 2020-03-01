@@ -9,7 +9,6 @@ const customStyles = {
     bottom: 'auto',
     marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-    width: '90vw',
     background:
       'linear-gradient(183deg,rgba(243,243,251,1) 0%,rgba(253,251,253,1) 100%) no-repeat',
     border: 'unset',

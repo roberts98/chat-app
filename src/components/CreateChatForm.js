@@ -5,7 +5,7 @@ import { getAvailableUsers, createChatProposal } from '../firebase';
 import { UserContext } from '../contexts/UserContext';
 import { Button, ButtonWrapper } from './';
 
-export function CreateChatForm() {
+export function CreateChatForm({ setIsModalOpen }) {
   const { user } = useContext(UserContext);
   const [availableUsers, setAvailableUsers] = useState([]);
   const [receipent, setReceipent] = useState('');
@@ -26,6 +26,7 @@ export function CreateChatForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     await createChatProposal(user.id, receipent.id);
+    setIsModalOpen(false);
   }
 
   return (

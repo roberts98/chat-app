@@ -18,7 +18,7 @@ export function Chat({
 }) {
   const { user } = useContext(UserContext);
   const [message, setMessage] = useState('');
-  const chat = useChat(id);
+  const chat = useChat(id) || {};
   const receiverId = chat.members?.filter(id => id !== user.id)[0];
   const receiver = useUser(receiverId);
 

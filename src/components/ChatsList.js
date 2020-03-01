@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 
 import { ChatsContext } from '../contexts';
 import { ChatTeaser } from './';
+import styled from 'styled-components';
 
 export function ChatsList() {
   const { isLoading, chats } = useContext(ChatsContext);
@@ -11,10 +12,16 @@ export function ChatsList() {
   }
 
   return (
-    <div>
+    <Wrapper>
       {chats.map(id => (
         <ChatTeaser id={id} key={id} />
       ))}
-    </div>
+    </Wrapper>
   );
 }
+
+const Wrapper = styled.div`
+  max-height: 50vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+`;

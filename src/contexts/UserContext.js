@@ -17,12 +17,12 @@ export function UserProvider({ children }) {
         const userRef = await createUserDocument(user);
         userRef.onSnapshot(snapshot => {
           setUser({ id: snapshot.id, ...snapshot.data() });
+          setIsLoading(false);
         });
       } else {
         setUser(null);
+        setIsLoading(false);
       }
-
-      setIsLoading(false);
     });
 
     return () => {

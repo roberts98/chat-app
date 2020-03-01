@@ -85,7 +85,7 @@ const Wrapper = styled.div`
 
   @media ${Device.laptop} {
     width: 290px;
-    box-shadow: -65px 45px 100px #5680f8;
+    box-shadow: -65px -30px 100px #5680f8;
   }
 `;
 

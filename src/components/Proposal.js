@@ -3,10 +3,11 @@ import styled from 'styled-components';
 
 import { acceptProposal, declineProposal } from '../firebase';
 import { useUser } from '../hooks';
-import { Icon } from './';
+import { Icon, SmallSpinner } from './';
 import { Colors } from '../styles/colors';
 import checkmark from '../assets/icons/checkmark.svg';
 import power from '../assets/icons/sidebar/power.svg';
+import { Device } from '../styles';
 
 export function Proposal({ proposal: { receipentId, requestorId, isMine } }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,7 +27,11 @@ export function Proposal({ proposal: { receipentId, requestorId, isMine } }) {
   }
 
   if (isLoading) {
-    return 'loading';
+    return (
+      <Wrapper>
+        <SmallSpinner />
+      </Wrapper>
+    );
   }
 
   return (
@@ -48,11 +53,14 @@ export function Proposal({ proposal: { receipentId, requestorId, isMine } }) {
 }
 
 const Wrapper = styled.div`
-  width: 580px;
   background-color: ${Colors.WHITE};
   padding: 28px 40px;
   border-radius: 6px;
   margin-bottom: 20px;
+
+  @media ${Device.laptopL} {
+    width: 580px;
+  }
 `;
 
 const Flex = styled.div`

@@ -20,7 +20,7 @@ export function Home() {
           <h1>Chats</h1>
           <span>Recent Chats</span>
         </Left>
-        <ButtonWrapper>
+        <ButtonWrapper icon={plus}>
           <Button onClick={handleModalOpen}>Create New Chat</Button>
         </ButtonWrapper>
       </Header>
@@ -34,7 +34,7 @@ export function Home() {
       </Header>
       <ProposalsList />
       <Modal setIsOpen={setIsModalOpen} isOpen={isModalOpen}>
-        <CreateChatForm />
+        <CreateChatForm setIsModalOpen={setIsModalOpen} />
       </Modal>
     </Main>
   );
@@ -89,10 +89,11 @@ export const ButtonWrapper = styled.div`
   position: relative;
 
   &::before {
-    content: url(${plus});
+    content: url(${({ icon }) => icon});
     position: absolute;
     left: 26px;
     top: 29px;
+    pointer-events: none;
   }
 `;
 

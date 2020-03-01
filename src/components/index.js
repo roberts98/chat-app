@@ -10,3 +10,4 @@ export * from './Sidebar';
 export * from './Search';
 export * from './ProposalsList';
 export * from './Proposal';
+export * from './Spinner';
